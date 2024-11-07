@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: bff-service
+
+server:
+  port: 3000
+
+eureka:
+  client:
+    enabled: true
+
+security:
+  app:
+    authentication:
+      cookie: "ud"
+
+app:
+  api:
+    version:
+      vendoria: "api/v1"
+
+    path:
+      users:
+        register: "/register"
+        signin: "/signin"
+        logout: "/logout"
+        getUser: "/user"
+
+views:
+  app:
+    error: "/path/to/error/page"
