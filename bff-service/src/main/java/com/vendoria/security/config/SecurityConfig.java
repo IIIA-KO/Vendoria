@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecutiryConfig {
+public class SecurityConfig {
     @Value("${security.app.authentication.cookie}")
     private String USER_CREDENTIALS_COOKIE;
 
@@ -28,7 +28,7 @@ public class SecutiryConfig {
 
     private final SignInRequestFilter signInRequestFilter;
 
-    @Bean
+    /*@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -47,7 +47,30 @@ public class SecutiryConfig {
                 .addFilterBefore(signInRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }*/
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/buildings").authenticated()
+                        .requestMatchers("/building").hasAuthority(Role.ADMIN.toString()) 
+                        .requestMatchers(HttpMethod.DELETE).hasAuthority(Role.ADMIN.toString())
+                        .anyRequest().permitAll()
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .formLogin(login -> login
+                        .loginPage("/signin")
+                        .successHandler(signInSuccessfulHandler))
+                .logout(logout -> logout
+                        .deleteCookies(USER_CREDENTIALS_COOKIE))
+                .addFilterBefore(signInRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
+
+    
 
     @Bean
     PasswordEncoder passwordEncoder() {

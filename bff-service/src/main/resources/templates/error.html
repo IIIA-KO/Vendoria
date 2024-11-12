@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error</title>
+</head>
+<body>
+<h1>Error Response</h1>
+<div>
+    <p>Status: <span th:text="${error.status}"></span></p>
+    <p>Type: <span th:text="${error.type}"></span></p>
+    <p>Title: <span th:text="${error.title}"></span></p>
+    <p>Error: <span th:text="${error.error}"></span></p>
+    <p>Details: <span th:text="${error.details}"></span></p>
+    <p>Timestamp: <span th:text="${#dates.format(error.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+</div>
+<h2><a href="/">Home</a></h2>
+</body>
+</html>

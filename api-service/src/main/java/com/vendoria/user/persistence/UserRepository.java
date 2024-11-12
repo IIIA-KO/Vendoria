@@ -20,10 +20,36 @@ public class UserRepository {
         return Optional.ofNullable(user);
     }
 
+    public Optional<User> findByUsername(String username) {
+        Session session = factory.openSession();
+        User user = null;
+        try {
+            user = session.createQuery("from User where username = :username", User.class)
+                    .setParameter("username", username)
+                    .uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return Optional.ofNullable(user);
+    }
+
     public Optional<User> findByEmail(String email) {
         Session session = factory.openSession();
-        User user = session.get(User.class, email);
-        session.close();
+        User user = null;
+        try {
+            user = session
+                    .createQuery("from User where email = :email", User.class)
+                    .setParameter("email", email)
+                    .uniqueResult();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
         return Optional.ofNullable(user);
     }
 

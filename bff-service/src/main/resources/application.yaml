@@ -1,6 +1,6 @@
 spring:
   application:
-    name: bff-service
+    name: vendoria-bff
 
 server:
   port: 3000
@@ -10,22 +10,43 @@ eureka:
     enabled: true
 
 security:
+  user:
+    name: 1
+    password: 1
   app:
     authentication:
       cookie: "ud"
 
 app:
   api:
-    version:
-      vendoria: "api/v1"
+    vendoria: "/api"
 
     path:
-      users:
+      auth:
         register: "/register"
         signin: "/signin"
         logout: "/logout"
+
+      users:
         getUser: "/user"
 
 views:
   app:
     error: "/path/to/error/page"
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+logging:
+  level:
+    com.vendoria.bff.feign: DEBUG

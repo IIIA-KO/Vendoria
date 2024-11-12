@@ -32,14 +32,13 @@ public class SignInRequestFilter extends OncePerRequestFilter {
 
         if (jsonPrincipal != null) {
             CustomUserDetails customUserDetails = new Gson().fromJson(jsonPrincipal, CustomUserDetails.class);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     customUserDetails,
                     null,
                     customUserDetails.getAuthorities()
             );
-
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        } else if (isProtectedUrl(request)) {
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+        } else if (!isPublicUrl(request.getRequestURI())) {
             response.sendRedirect("/signin");
             return;
         }
@@ -47,8 +46,9 @@ public class SignInRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private boolean isProtectedUrl(HttpServletRequest request) {
-        String path = request.getRequestURI();
-        return !path.equals("/signin") && !path.equals("/register") && !path.equals("/home");
+    private boolean isPublicUrl(String uri) {
+        return uri.equals("/signin") || 
+               uri.equals("/register") || 
+               uri.startsWith("/static/");
     }
 }

@@ -26,18 +26,27 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.getUser(username);
-        if (user.getRole().equals(Role.UNKNOWN)) {
-            throw new UsernameNotFoundException(username);
-        }
+        try {
+            if (username == null || username.trim().isEmpty()) {
+                throw new UsernameNotFoundException("Username is empty");
+            }
 
-        return CustomUserDetails
-                .builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .password(passwordEncoder.encode(user.getPassword()))
-                .role(mapRolesToGrantedAuthorities(user.getRole()))
-                .build();
+            User user = userService.getUserByUsername(username);
+            if (user == null || user.getRole().equals(Role.UNKNOWN)) {
+                throw new UsernameNotFoundException("User not found: " + username);
+            }
+
+            return CustomUserDetails
+                    .builder()
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .password(user.getPassword())
+                    .role(mapRolesToGrantedAuthorities(user.getRole()))
+                    .build();
+        } catch (Exception e) {
+            log.error("Error loading user by username: {}", username, e);
+            throw new UsernameNotFoundException("Error loading user", e);
+        }
     }
 
     private Collection<SimpleGrantedAuthority> mapRolesToGrantedAuthorities(Role role) {

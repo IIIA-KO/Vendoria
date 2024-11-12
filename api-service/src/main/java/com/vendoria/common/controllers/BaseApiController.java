@@ -5,14 +5,11 @@ import com.vendoria.common.ResultWithValue;
 import com.vendoria.common.errors.Error;
 import com.vendoria.common.errors.NotFoundError;
 import com.vendoria.common.errors.UnauthorizedError;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
 
-@Log4j2
-@RestController
+
 public class BaseApiController {
-    protected <T> ResponseEntity<?> handleResult(ResultWithValue<T> result) {
+    protected <T> ResponseEntity<?> handleResultWithValue(ResultWithValue<T> result) {
         if (result.isSuccess()) {
             return result.value() != null ? ResponseEntity.ok(result.value()) : ResponseEntity.notFound().build();
         }

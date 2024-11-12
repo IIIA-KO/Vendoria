@@ -32,6 +32,11 @@ public class CookieService {
 
     public String getCookie(String cookieName, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
+            return null;
+        }
+
         String data = null;
 
         for (Cookie cookie : cookies) {

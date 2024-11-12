@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FeignConfig {
     @Bean
-    public CustomFeignErrorDecoder customFeignErrorResponseDecoder(ObjectMapper objectMapper) {
+    public CustomFeignErrorDecoder errorDecoder(ObjectMapper objectMapper) {
         return new CustomFeignErrorDecoder(objectMapper);
     }
 }
