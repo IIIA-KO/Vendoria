@@ -1,6 +1,13 @@
 spring:
   application:
     name: vendoria-bff
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+    template-resolver-order: 1
 
 server:
   port: 3000

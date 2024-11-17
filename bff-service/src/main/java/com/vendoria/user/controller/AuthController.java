@@ -1,11 +1,15 @@
 package com.vendoria.user.controller;
 
 import com.vendoria.security.entity.CustomUserDetails;
+import com.vendoria.security.service.CookieService;
 import com.vendoria.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
+    private final CookieService cookieService;
 
     @GetMapping("/signin")
     public ModelAndView showSignInPage() {
@@ -58,6 +63,19 @@ public class AuthController {
         }
 
         return new ModelAndView("redirect:/");
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        if (session != null) {
+            session.invalidate();
+        }
+
+        cookieService.clearCookie(request, response);
+        SecurityContextHolder.clearContext();
+
+        return "redirect:/";
     }
 
     @GetMapping("/home")

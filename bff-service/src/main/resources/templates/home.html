@@ -1,9 +1,101 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
-<head>
-    <title>Home</title>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layouts/main :: head}">
+    <title id="title">Home</title>
 </head>
 <body>
-<h2>Vendoria Home Page</h2>
+<th:block th:replace="~{layouts/main :: main(content=~{::div#content})}">
+    <div id="content">
+        <!-- Привітання -->
+        <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">
+                <span sec:authorize="!isAuthenticated()">Welcome to Vendoria!</span>
+                <span sec:authorize="isAuthenticated()">
+                    Hello, <span sec:authentication="name" class="text-green-600"></span>!
+                </span>
+            </h1>
+            <p class="text-gray-600">Find best products.</p>
+        </div>
+
+        <!-- Швидкі дії -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            <!-- Для всіх користувачів -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Каталог товарів</h2>
+                <p class="text-gray-600 mb-4">Перегляньте наш широкий асортимент товарів</p>
+                <a href="/products"
+                   class="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300">
+                    Переглянути товари
+                </a>
+            </div>
+
+            <!-- Для авторизованих користувачів -->
+            <div sec:authorize="isAuthenticated() and hasAuthority('USER')"
+                 class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">My cart</h2>
+                <p class="text-gray-600 mb-4">Перегляньте товари у вашому кошику</p>
+                <a href="/cart"
+                   class="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300">
+                    Перейти до кошика
+                </a>
+            </div>
+
+            <!-- Для адміністраторів -->
+            <div sec:authorize="hasAuthority('ADMIN')"
+                 class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Administrator panel</h2>
+                <p class="text-gray-600 mb-4">Управління товарами та користувачами</p>
+                <div class="space-y-2">
+                    <a href="/admin/products"
+                       class="block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300 text-center">
+                        Управління товарами
+                    </a>
+                    <a href="/admin/users"
+                       class="block bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-300 text-center">
+                        Управління користувачами
+                    </a>
+                </div>
+            </div>
+
+            <!-- Для неавторизованих користувачів -->
+            <div sec:authorize="!isAuthenticated()"
+                 class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Приєднуйтесь до нас</h2>
+                <p class="text-gray-600 mb-4">Зареєструйтесь, щоб отримати доступ до всіх можливостей</p>
+                <div class="space-y-2">
+                    <a href="/signin"
+                       class="block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300 text-center">
+                        Увійти
+                    </a>
+                    <a href="/register"
+                       class="block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300 text-center">
+                        Зареєструватися
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Статистика (для адміністраторів) -->
+        <div sec:authorize="hasAuthority('ADMIN')"
+             class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Статистика магазину</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="border rounded-lg p-4">
+                    <p class="text-gray-600">Всього товарів</p>
+                    <p class="text-2xl font-bold text-green-600">150</p>
+                </div>
+                <div class="border rounded-lg p-4">
+                    <p class="text-gray-600">Активних користувачів</p>
+                    <p class="text-2xl font-bold text-blue-600">1,234</p>
+                </div>
+                <div class="border rounded-lg p-4">
+                    <p class="text-gray-600">Замовлень сьогодні</p>
+                    <p class="text-2xl font-bold text-purple-600">25</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
 </body>
 </html>

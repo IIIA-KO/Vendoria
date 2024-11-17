@@ -1,7 +1,9 @@
 package com.vendoria.security.config;
 
 import com.vendoria.security.filter.SignInRequestFilter;
+import com.vendoria.security.handler.CustomLogoutSuccessHandler;
 import com.vendoria.security.handler.SignInSuccessfulHandler;
+import com.vendoria.security.service.CustomUserDetailsService;
 import com.vendoria.user.entity.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -26,36 +28,16 @@ public class SecurityConfig {
 
     private final SignInSuccessfulHandler signInSuccessfulHandler;
 
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
     private final SignInRequestFilter signInRequestFilter;
 
     /*@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/home").authenticated()
-                        .requestMatchers("/signin", "/register").permitAll()
-                        .requestMatchers(HttpMethod.DELETE).hasAuthority(Role.ADMIN.toString())
-                        .anyRequest().permitAll()
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(login -> login
-                        .loginPage("/signin")
-                        .successHandler(signInSuccessfulHandler)
-                )
-                .logout(logout -> logout.deleteCookies(USER_CREDENTIALS_COOKIE))
-                .addFilterBefore(signInRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }*/
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/buildings").authenticated()
-                        .requestMatchers("/building").hasAuthority(Role.ADMIN.toString()) 
+                        .requestMatchers("/").authenticated()
                         .requestMatchers(HttpMethod.DELETE).hasAuthority(Role.ADMIN.toString())
                         .anyRequest().permitAll()
                 )
@@ -68,9 +50,32 @@ public class SecurityConfig {
                         .deleteCookies(USER_CREDENTIALS_COOKIE))
                 .addFilterBefore(signInRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-    }
+    }*/
 
-    
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/", "/signin", "/register", "/products").permitAll()
+                        .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
+                        .requestMatchers("/cart").hasRole(Role.USER.name())
+                        .anyRequest().authenticated()
+                )
+                .formLogin(login -> login
+                        .loginPage("/signin")
+                        .successHandler(signInSuccessfulHandler))
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessHandler(customLogoutSuccessHandler)
+                        .deleteCookies(USER_CREDENTIALS_COOKIE)
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .permitAll()
+                )
+                .addFilterBefore(signInRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
 
     @Bean
     PasswordEncoder passwordEncoder() {

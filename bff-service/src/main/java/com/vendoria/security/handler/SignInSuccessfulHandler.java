@@ -25,9 +25,7 @@ public class SignInSuccessfulHandler extends SimpleUrlAuthenticationSuccessHandl
     private final CookieService cookieService;
 
     @Override
-    public void onAuthenticationSuccess(
-            HttpServletRequest request,
-            HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
         String jsonPrincipal = new Gson().toJson(principal);
         cookieService.createCookie(USER_CREDENTIALS_COOKIE, jsonPrincipal, 24 * 60 * 60, response);
