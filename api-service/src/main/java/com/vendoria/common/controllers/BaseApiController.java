@@ -9,26 +9,40 @@ import org.springframework.http.ResponseEntity;
 
 
 public class BaseApiController {
-    protected <T> ResponseEntity<?> handleResultWithValue(ResultWithValue<T> result) {
+    protected <T> ResponseEntity<ResultWithValue<T>> handleResultWithValue(ResultWithValue<T> result) {
         if (result.isSuccess()) {
-            return result.value() != null ? ResponseEntity.ok(result.value()) : ResponseEntity.notFound().build();
+            return ResponseEntity.ok(result);
         }
-        return handleError(result.error());
+
+        //return handleErrorWithValue(result.error());
+        return ResponseEntity.status(200).body(ResultWithValue.failureWithResult(result.error()));
     }
 
-    protected ResponseEntity<?> handleResult(Result result) {
+    protected ResponseEntity<Result> handleResult(Result result) {
         if (result.isSuccess()) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(result);
         }
-        return handleError(result.error());
+        return ResponseEntity.status(200).body(Result.failure(result.error()));
+        //return handleError(result.error());
     }
 
-    private ResponseEntity<?> handleError(Error error) {
+    private ResponseEntity<Result> handleError(Error error) {
         if (error instanceof NotFoundError) {
-            return ResponseEntity.status(404).body(error);
+            return ResponseEntity.status(404).body(Result.failure(error));
         } else if (error instanceof UnauthorizedError) {
-            return ResponseEntity.status(401).body(error);
+            return ResponseEntity.status(401).body(Result.failure(error));
         }
-        return ResponseEntity.badRequest().body(error);
+
+        return ResponseEntity.status(500).body(Result.failure(error));
+    }
+
+    private <T> ResponseEntity<ResultWithValue<T>> handleErrorWithValue(Error error) {
+        if (error instanceof NotFoundError) {
+            return ResponseEntity.status(404).body(ResultWithValue.failureWithResult(error));
+        } else if (error instanceof UnauthorizedError) {
+            return ResponseEntity.status(401).body(ResultWithValue.failureWithResult(error));
+        }
+
+        return ResponseEntity.status(500).body(ResultWithValue.failureWithResult(error));
     }
 }

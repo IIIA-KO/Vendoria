@@ -1,20 +1,41 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Error</title>
+    <title>Error - Vendoria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<h1>Error Response</h1>
-<div>
-    <p>Status: <span th:text="${error.status}"></span></p>
-    <p>Type: <span th:text="${error.type}"></span></p>
-    <p>Title: <span th:text="${error.title}"></span></p>
-    <p>Error: <span th:text="${error.error}"></span></p>
-    <p>Details: <span th:text="${error.details}"></span></p>
-    <p>Timestamp: <span th:text="${#dates.format(error.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+<body class="bg-gray-100">
+<div class="min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
+        <div class="text-center">
+            <!-- Іконки для різних типів помилок -->
+            <div th:switch="${error.status}">
+                <div th:case="404" class="text-6xl text-yellow-500 mb-4">🔍</div>
+                <div th:case="401" class="text-6xl text-red-500 mb-4">🔒</div>
+                <div th:case="400" class="text-6xl text-orange-500 mb-4">⚠️</div>
+                <div th:case="*" class="text-6xl text-gray-500 mb-4">❌</div>
+            </div>
+
+            <h1 class="text-2xl font-bold text-gray-800 mb-4"
+                th:text="${error.title ?: 'Помилка'}">Помилка</h1>
+
+            <p class="text-gray-600 mb-6" th:text="${error.details ?: error.message}"></p>
+
+            <div class="space-y-4">
+                <a href="/"
+                   class="block w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300">
+                    Home
+                </a>
+
+                <button onclick="history.back()"
+                        class="block w-full px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition duration-300">
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
-<h2><a href="/">Home</a></h2>
 </body>
 </html>

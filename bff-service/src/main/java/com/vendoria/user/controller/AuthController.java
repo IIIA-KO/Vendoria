@@ -1,7 +1,11 @@
 package com.vendoria.user.controller;
 
+import com.vendoria.common.Result;
+import com.vendoria.common.ResultWithValue;
+import com.vendoria.common.handlers.ErrorHandler;
 import com.vendoria.security.entity.CustomUserDetails;
 import com.vendoria.security.service.CookieService;
+import com.vendoria.user.dto.UserDto;
 import com.vendoria.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,14 +38,14 @@ public class AuthController {
             @RequestParam("username") String username,
             @RequestParam("password") String password
     ) {
-        var result = userService.signIn(username, password);
-        if (result.isFailure()) {
-            ModelAndView modelAndView = new ModelAndView("signin");
-            modelAndView.addObject("error", result.getError().getMessage());
-            return modelAndView;
-        }
+        ResultWithValue<UserDto> result = userService.signIn(username, password);
 
-        return new ModelAndView("redirect:/");
+        return ErrorHandler.handleResultWithValue(
+                result,
+                "redirect:/",
+                "signin",
+                "user"
+        );
     }
 
     @GetMapping("/register")
@@ -56,13 +60,9 @@ public class AuthController {
             @RequestParam("password") String password,
             Model model
     ) {
-        var result = userService.register(username, email, password);
-        if (result.isFailure()) {
-            model.addAttribute("error", result.getError());
-            return new ModelAndView("register");
-        }
+        Result result = userService.register(username, email, password);
 
-        return new ModelAndView("redirect:/");
+        return ErrorHandler.handleResult(result, "redirect:/", "register");
     }
 
     @PostMapping("/logout")

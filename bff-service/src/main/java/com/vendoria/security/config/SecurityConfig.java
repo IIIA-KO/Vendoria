@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/").authenticated()
                         .requestMatchers(HttpMethod.DELETE).hasAuthority(Role.ADMIN.toString())
                         .anyRequest().permitAll()
-                )
+                )s
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(login -> login
