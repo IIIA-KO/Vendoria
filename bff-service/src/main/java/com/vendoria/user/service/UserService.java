@@ -12,6 +12,7 @@ import com.vendoria.user.requests.RegisterUserRequest;
 import com.vendoria.user.requests.SignInUserRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -22,7 +23,8 @@ public class UserService {
     private final CookieService cookieService;
 
     public User getUserByUsername(String username) {
-        return vendoriaApiClient.getUserByUsername(username);
+        var user = vendoriaApiClient.getUserByUsername(username);
+        return user;
     }
 
     public ResultWithValue<UserDto> signIn(String username, String password) {
@@ -49,8 +51,7 @@ public class UserService {
         } catch (FeignResultException e) {
             log.error("API error during registration: {}", e.getMessage());
             return Result.failure(e.getError());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             String errorMessage = e.toString();
             log.error("Unexpected error during registration", e);
             return Result.failure(Error.UNEXPECTED);

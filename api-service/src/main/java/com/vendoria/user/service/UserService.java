@@ -83,6 +83,7 @@ public class UserService {
         }
 
         User user = userOptional.get();
-        return Result.successWithValue(user);
+        var result = ResultWithValue.successWithValue(user);
+        return result;
     }
 }

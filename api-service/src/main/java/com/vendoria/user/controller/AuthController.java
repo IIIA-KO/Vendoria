@@ -21,12 +21,12 @@ public class AuthController extends BaseApiController {
     private final UserService userService;
 
     @PostMapping("/signin")
-    public ResponseEntity<ResultWithValue<UserDto>> signIn(@RequestBody @Validated SignInUserRequest request) {
+    public ResponseEntity<?> signIn(@RequestBody @Validated SignInUserRequest request) {
         return this.handleResultWithValue(userService.signInUser(request));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Result> registerUser(@RequestBody @Validated RegisterUserRequest request) {
+    public ResponseEntity<?> registerUser(@RequestBody @Validated RegisterUserRequest request) {
         var result = this.userService.registerUser(request);
         return this.handleResult(result);
     }
