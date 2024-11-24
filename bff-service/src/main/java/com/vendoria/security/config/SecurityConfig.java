@@ -29,26 +29,6 @@ public class SecurityConfig {
 
     private final SignInRequestFilter signInRequestFilter;
 
-    /*@Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/").authenticated()
-                        .requestMatchers(HttpMethod.DELETE).hasAuthority(Role.ADMIN.toString())
-                        .anyRequest().permitAll()
-                )s
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(login -> login
-                        .loginPage("/signin")
-                        .successHandler(signInSuccessfulHandler))
-                .logout(logout -> logout
-                        .deleteCookies(USER_CREDENTIALS_COOKIE))
-                .addFilterBefore(signInRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }*/
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http

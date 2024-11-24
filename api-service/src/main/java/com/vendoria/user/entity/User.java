@@ -1,5 +1,6 @@
 package com.vendoria.user.entity;
 
+import com.vendoria.common.entities.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,11 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class User extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String username;
 
@@ -27,4 +24,20 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        User clone = (User) super.clone();
+        clone.setPassword(null);
+        return clone;
+    }
+
+    @Override
+    public int compareTo(BaseEntity o) {
+        if (!(o instanceof User other)) {
+            return super.compareTo(o);
+        }
+
+        return username.compareTo(other.getUsername());
+    }
 }
