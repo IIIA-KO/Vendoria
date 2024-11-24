@@ -53,9 +53,12 @@ The project uses a microservices architecture with three main components:
 - Generic classes and methods: [ResultWithValue.java](api-service/src/main/java/com/vendoria/common/ResultWithValue.java)
 - Generic utility methods: [EntityUtils.java](api-service/src/main/java/com/vendoria/common/utils/EntityUtils.java)
 
-### 4. Annotations
-- Custom annotations usage: [EnableDiscoveryClient](api-service/src/main/java/com/vendoria/ApiServiceApplication.java)
-- Spring annotations: [UserService.java](api-service/src/main/java/com/vendoria/user/service/UserService.java)
+### 4. RegularExpressions, Reflection, Annotations
+- Custom validation annotation: [Password.java](api-service/src/main/java/com/vendoria/common/validation/Password.java)
+- Annotation processor (RegExp): [PasswordValidator.java](api-service/src/main/java/com/vendoria/common/validation/PasswordValidator.java)
+- Validation constraints usage: [RegisterUserRequest.java](api-service/src/main/java/com/vendoria/user/requests/RegisterUserRequest.java)
+- Spring annotations: [AuthController.java](api-service/src/main/java/com/vendoria/user/controller/AuthController.java)
+- Custom reflection utilities: [ReflectionUtils.java](api-service/src/main/java/com/vendoria/common/utils/ReflectionUtils.java)
 
 ## Technologies Used
 - Java 21

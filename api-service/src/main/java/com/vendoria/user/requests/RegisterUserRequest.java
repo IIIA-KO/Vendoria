@@ -1,5 +1,6 @@
 package com.vendoria.user.requests;
 
+import com.vendoria.common.validation.Password;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -14,7 +15,7 @@ public class RegisterUserRequest {
     private String email;
 
     @NotBlank
-    @Size(min = 6)
+    @Password(minLength = 6, requireSpecialChar = true, requireNumber = true, requireUpperCase = true)
     private String password;
 
     @NotBlank
