@@ -10,12 +10,18 @@
 <div class="min-h-screen flex items-center justify-center">
     <div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
         <div class="text-center">
-            <!-- Іконки для різних типів помилок -->
-            <div th:switch="${error.status}">
-                <div th:case="404" class="text-6xl text-yellow-500 mb-4">🔍</div>
-                <div th:case="401" class="text-6xl text-red-500 mb-4">🔒</div>
-                <div th:case="400" class="text-6xl text-orange-500 mb-4">⚠️</div>
-                <div th:case="*" class="text-6xl text-gray-500 mb-4">❌</div>
+            <div th:if="${error != null}">
+                <div th:switch="${error.status}">
+                    <div th:case="404" class="text-6xl text-yellow-500 mb-4">🔍</div>
+                    <div th:case="403" class="text-6xl text-red-500 mb-4">🔒</div>
+                    <div th:case="400" class="text-6xl text-orange-500 mb-4">⚠️</div>
+                    <div th:case="*" class="text-6xl text-gray-500 mb-4">❌</div>
+                </div>
+
+                <h1 class="text-2xl font-bold text-gray-800 mb-4"
+                    th:text="${error.title ?: 'Помилка'}">Помилка</h1>
+
+                <p class="text-gray-600 mb-6" th:text="${error.message}"></p>
             </div>
 
             <h1 class="text-2xl font-bold text-gray-800 mb-4"

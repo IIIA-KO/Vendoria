@@ -31,5 +31,6 @@
 
         <!-- Mapping -->
         <mapping class="com.vendoria.user.entity.User" />
+        <mapping class="com.vendoria.product.entity.Product" />
     </session-factory>
 </hibernate-configuration>

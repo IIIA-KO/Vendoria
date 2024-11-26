@@ -1,4 +1,4 @@
-package com.vendoria.common.utils;
+package com.vendoria.utils;
 
 import com.vendoria.common.entities.BaseEntity;
 

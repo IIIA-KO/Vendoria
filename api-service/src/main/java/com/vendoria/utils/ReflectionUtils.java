@@ -1,4 +1,4 @@
-package com.vendoria.common.utils;
+package com.vendoria.utils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

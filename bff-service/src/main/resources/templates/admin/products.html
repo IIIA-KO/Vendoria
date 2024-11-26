@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/main :: head}">
+    <title id="title">Admin - Products</title>
+</head>
+<body>
+<th:block th:replace="~{layouts/main :: main(content=~{::div#content})}">
+    <div id="content" class="container mx-auto px-4 py-8">
+        <div class="mb-6 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-gray-800">Управління товарами</h1>
+            <button onclick="openCreateModal()"
+                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                Add product
+            </button>
+        </div>
+
+        <div th:if="${success}" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4"
+             th:text="${success}"></div>
+        <div th:if="${error}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4"
+             th:text="${error}"></div>
+
+        <div class="bg-white rounded-lg shadow overflow-x-auto">
+            <table class="min-w-full">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock Quantity</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                <tr th:each="product : ${products}">
+                    <td class="px-6 py-4" th:text="${product.name}">Name</td>
+                    <td class="px-6 py-4" th:text="${product.description}">Description</td>
+                    <td class="px-6 py-4" th:text="${product.price + '$'}">Price</td>
+                    <td class="px-6 py-4" th:text="${product.stockQuantity}">Stock</td>
+                    <td class="px-6 py-4">
+                        <button th:onclick="'openEditModal(' + ${product.id} + ')'"
+                                class="text-blue-600 hover:text-blue-900 mr-2">
+                            Edit
+                        </button>
+                        <form th:action="@{/admin/products/{id}/delete(id=${product.id})}"
+                              method="post" class="inline">
+                            <button type="submit"
+                                    class="text-red-600 hover:text-red-900"
+                                    onclick="return confirm('Ви впевнені?')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="createModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Product creation</h3>
+                    <form th:action="@{/admin/products}" method="post">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                            <input type="text" name="name" required
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                            <textarea name="description" required
+                                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Price</label>
+                            <input type="number" name="price" step="0.01" required
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Stock Quantity</label>
+                            <input type="number" name="stockQuantity" required
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" onclick="closeCreateModal()"
+                                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">
+                                Cancel
+                            </button>
+                            <button type="submit"
+                                    class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                                Create
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="editModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Product edit</h3>
+                    <form id="editForm" method="post">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                            <input type="text" name="name" id="editName" required
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                            <textarea name="description" id="editDescription" required
+                                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Price</label>
+                            <input type="number" name="price" id="editPrice" step="0.01" required
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Stock Quantity</label>
+                            <input type="number" name="stockQuantity" id="editStockQuantity" required
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                        </div>
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" onclick="closeEditModal()"
+                                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">
+                                Cancel
+                            </button>
+                            <button type="submit"
+                                    class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function openCreateModal() {
+                document.getElementById('createModal').classList.remove('hidden');
+            }
+
+            function closeCreateModal() {
+                document.getElementById('createModal').classList.add('hidden');
+            }
+
+            function openEditModal(id) {
+                const form = document.getElementById('editForm');
+                form.action = `/admin/products/${id}`;
+
+                document.getElementById('editModal').classList.remove('hidden');
+            }
+
+            function closeEditModal() {
+                document.getElementById('editModal').classList.add('hidden');
+            }
+        </script>
+    </div>
+</th:block>
+</body>
+</html>

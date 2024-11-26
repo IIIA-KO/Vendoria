@@ -1,6 +1,5 @@
 package com.vendoria.user.errors;
 
-import com.vendoria.common.errors.Error;
 import com.vendoria.common.errors.NotFoundError;
 import com.vendoria.common.errors.UnauthorizedError;
 

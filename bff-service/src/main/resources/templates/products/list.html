@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layouts/main :: head}">
+    <title id="title">Products</title>
+</head>
+<body>
+<th:block th:replace="~{layouts/main :: main(content=~{::div#content})}">
+    <div id="content" class="container mx-auto px-4 py-8">
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Каталог товарів</h1>
+
+            <!-- Пошук -->
+            <form method="get" class="mt-4">
+                <div class="flex gap-4">
+                    <input type="text" name="search" th:value="${param.search}"
+                           class="flex-grow px-4 py-2 border rounded-lg"
+                           placeholder="Пошук товарів...">
+                    <button type="submit"
+                            class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                        Пошук
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Список товарів -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div th:each="product : ${products}" class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-2" th:text="${product.name}">Product Name</h2>
+                <p class="text-gray-600 mb-4" th:text="${product.description}">Description</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-2xl font-bold text-green-600" th:text="${product.price + ' грн'}">Price</span>
+                    <span class="text-sm text-gray-500"
+                          th:text="'В наявності: ' + ${product.stockQuantity}">Stock</span>
+                </div>
+
+                <div sec:authorize="hasAuthority('USER')" class="mt-4">
+                    <button class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                        Додати в кошик
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>
