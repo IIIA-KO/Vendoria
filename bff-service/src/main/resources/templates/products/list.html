@@ -30,19 +30,55 @@
                 <h2 class="text-xl font-semibold mb-2" th:text="${product.name}">Product Name</h2>
                 <p class="text-gray-600 mb-4" th:text="${product.description}">Description</p>
                 <div class="flex justify-between items-center">
-                    <span class="text-2xl font-bold text-green-600" th:text="${product.price + ' грн'}">Price</span>
+                    <span class="text-2xl font-bold text-green-600" th:text="${product.price + '$'}">Price</span>
                     <span class="text-sm text-gray-500"
-                          th:text="'В наявності: ' + ${product.stockQuantity}">Stock</span>
+                          th:text="'In stock: ' + ${product.stockQuantity}">Stock</span>
                 </div>
 
-                <div sec:authorize="hasAuthority('USER')" class="mt-4">
-                    <button class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                        Додати в кошик
-                    </button>
+                <div class="mt-4">
+                    <form>
+                        <input type="hidden" name="productId" th:value="${product.id}"/>
+                        <input type="hidden" name="productName" th:value="${product.name}">
+                        <input type="hidden" name="productPrice" th:value="${product.price}">
+                        <input type="number" name="quantity" value="1" min="1" required/>
+                        <button type="button"
+                                class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                                onclick="addToCart(this)">
+                            Add to Cart
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </th:block>
+<script>
+    function addToCart(button) {
+
+        const form = button.closest('form');
+        const productId = form.querySelector('input[name="productId"]').value;
+        const productName = form.querySelector('input[name="productName"]').value;
+        const productPrice = parseFloat(form.querySelector('input[name="productPrice"]').value);
+        const quantity = form.querySelector('input[name="quantity"]').value;
+
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        const existingItem = cart.find(item => item.productId === productId);
+        if (existingItem) {
+            existingItem.quantity += parseInt(quantity);
+        } else {
+            cart.push({
+                productId: productId,
+                productName: productName,
+                productPrice: productPrice,
+                quantity: parseInt(quantity)
+            });
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert("Product was added to the Cart!");
+    }
+
+</script>
 </body>
 </html>

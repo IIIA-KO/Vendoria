@@ -8,7 +8,6 @@ import com.vendoria.common.errors.Error;
 import com.vendoria.product.dto.ProductDto;
 import com.vendoria.product.requests.CreateProductRequest;
 import com.vendoria.product.requests.UpdateProductRequest;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

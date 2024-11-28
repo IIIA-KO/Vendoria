@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layouts/main :: head}">
+    <title id="title">Cart</title>
+</head>
+<body>
+<th:block th:replace="~{layouts/main :: main(content=~{::div#content})}">
+    <div id="content" class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-6">Your Cart</h1>
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <table class="table-auto w-full border-collapse border border-gray-300">
+                <thead class="bg-gray-200">
+                <tr>
+                    <th class="px-4 py-2 text-left border border-gray-300">Product</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">Quantity</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">Price</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">Total</th>
+                    <th class="px-4 py-2 text-left border border-gray-300">Actions</th>
+                </tr>
+                </thead>
+                <tbody id="cart-items">
+                <!-- Cart items will be dynamically rendered here -->
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-6">
+            <div class="text-right text-2xl font-bold">Total Price: $<span id="total-price">0.00</span></div>
+            <div class="flex justify-between mt-4">
+                <button id="clear-cart" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600">
+                    Clear Cart
+                </button>
+                <form id="purchase-form">
+                    <input type="hidden" name="cartData" id="cartData"/>
+                    <button id="confirmPurchase"
+                            class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">
+                        Create Order
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const confirmPurchaseButton = document.getElementById('confirmPurchase');
+        if (confirmPurchaseButton) {
+            confirmPurchaseButton.addEventListener('click', () => {
+                purchaseCart();
+            })
+        }
+
+        const cartItemsContainer = document.getElementById('cart-items');
+        const clearCartButton = document.getElementById('clear-cart');
+        const totalPriceElement = document.getElementById('total-price');
+        const purchaseForm = document.getElementById('purchase-form');
+        const cartDataInput = document.getElementById('cartData');
+
+        function getCart() {
+            console.log("Cart: ", JSON.parse(localStorage.getItem('cart')) || [])
+            return JSON.parse(localStorage.getItem('cart')) || [];
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        function purchaseCart() {
+            const cart = getCart();
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+
+            fetch('/cart/purchase', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(cart),
+            });
+        }
+
+        function renderCart() {
+            const cart = getCart();
+            cartItemsContainer.innerHTML = '';
+            let totalPrice = 0.0;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-4">Your cart is empty!</td>
+                    </tr>
+                `;
+                totalPriceElement.textContent = '0.00';
+                return;
+            }
+
+            cart.forEach((item, index) => {
+                const price = item.productPrice || 0;
+                const productTotal = item.quantity * price;
+                totalPrice += productTotal;
+
+                console.log("Price: ", price);
+                console.log("productTotal: ", productTotal);
+                console.log("totalPrice: ", totalPrice);
+
+                const row = document.createElement('tr');
+                row.classList.add('hover:bg-gray-100');
+                row.innerHTML = `
+                    <td class="px-4 py-2 border border-gray-300">${item.productName || 'Unknown Product'}</td>
+                    <td class="px-4 py-2 border border-gray-300">
+                        <input type="number" class="quantity-input w-16 text-center border" data-index="${index}" value="${item.quantity}" min="1"/>
+                    </td>
+                    <td class="px-4 py-2 border border-gray-300">$${price.toFixed(2)}</td>
+                    <td class="px-4 py-2 border border-gray-300">$${productTotal}</td>
+                    <td class="px-4 py-2 border border-gray-300">
+                        <button data-index="${index}" class="remove-item bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                            Remove
+                        </button>
+                    </td>
+                `;
+                cartItemsContainer.appendChild(row);
+            });
+
+            totalPriceElement.textContent = totalPrice.toFixed(2);
+
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index, 10);
+                    removeFromCart(index);
+                });
+            });
+
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const index = parseInt(e.target.dataset.index, 10);
+                    const newQuantity = parseInt(e.target.value, 10);
+                    updateCartQuantity(index, newQuantity);
+                });
+            });
+        }
+
+
+        function updateCartQuantity(index, quantity) {
+            const cart = getCart();
+            if (quantity < 1) {
+                alert("Quantity must be at least 1");
+                return;
+            }
+            cart[index].quantity = quantity;
+            saveCart(cart);
+            renderCart();
+        }
+
+        function removeFromCart(index) {
+            const cart = getCart();
+            cart.splice(index, 1);
+            saveCart(cart);
+            renderCart();
+        }
+
+        clearCartButton.addEventListener('click', () => {
+            localStorage.removeItem('cart');
+            renderCart();
+        });
+
+        purchaseForm.addEventListener('submit', (e) => {
+            const cart = getCart();
+            if (cart.length === 0) {
+                e.preventDefault();
+                alert('Your cart is empty!');
+                return;
+            }
+            cartDataInput.value = JSON.stringify(cart);
+        });
+
+        renderCart();
+    });
+</script>
+</body>
+</html>

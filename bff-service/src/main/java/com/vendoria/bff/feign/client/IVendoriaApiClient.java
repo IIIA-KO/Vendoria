@@ -3,6 +3,7 @@ package com.vendoria.bff.feign.client;
 import com.vendoria.bff.feign.config.FeignConfig;
 import com.vendoria.common.Result;
 import com.vendoria.common.ResultWithValue;
+import com.vendoria.order.dto.OrderItemDto;
 import com.vendoria.product.dto.ProductDto;
 import com.vendoria.product.requests.CreateProductRequest;
 import com.vendoria.product.requests.UpdateProductRequest;
@@ -46,4 +47,7 @@ public interface IVendoriaApiClient {
 
     @DeleteMapping("/api/products/{id}")
     Result deleteProduct(@PathVariable Long id);
+
+    @PostMapping("/api/cart/order")
+    Result createOrder(@RequestBody List<OrderItemDto> orderItems);
 }

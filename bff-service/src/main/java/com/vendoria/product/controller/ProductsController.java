@@ -1,8 +1,6 @@
 package com.vendoria.product.controller;
 
-import com.vendoria.common.ResultWithValue;
 import com.vendoria.common.handlers.ErrorHandler;
-import com.vendoria.product.dto.ProductDto;
 import com.vendoria.product.requests.CreateProductRequest;
 import com.vendoria.product.requests.UpdateProductRequest;
 import com.vendoria.product.service.ProductService;
@@ -15,9 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
