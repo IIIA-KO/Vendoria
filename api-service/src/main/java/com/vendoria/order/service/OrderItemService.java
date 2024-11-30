@@ -1,4 +1,4 @@
-package com.vendoria.user.service;
+package com.vendoria.order.service;
 
 import com.vendoria.order.entity.OrderItem;
 import com.vendoria.order.persistence.OrderItemRepository;

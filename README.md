@@ -49,20 +49,30 @@ The project uses a microservices architecture with three main components:
 - Interface implementation: [CustomUserDetails.java](bff-service/src/main/java/com/vendoria/security/entity/CustomUserDetails.java)
 - Inheritance and method overriding: [User.java](api-service/src/main/java/com/vendoria/user/entity/User.java)
 
-### 2. Exception Handling
+### 2. Java Collection Framework
+
+- **HashMap**: Used in the `ProductRepository` to cache products by their IDs. This allows for quick access to products, reducing lookup time. When a product is requested, it first checks the cache, and if the product is found, it is returned from the cache, improving performance. If the product is not found in the cache, it is loaded from the database and added to the cache for future use. [ProductRepository.java](api-service/src/main/java/com/vendoria/product/persistence/ProductRepository.java)
+
+- **ArrayList**: Used in classes like `OrderItemService` to store lists of order items. This allows for dynamic resizing of the list and easy addition or removal of elements. [OrderItemService.java](api-service/src/main/java/com/vendoria/order/service/OrderItemService.java)
+
+- **Stream API**: Utilized in various parts of the project for processing collections, such as filtering available products, converting lists of objects to DTOs, and other collection operations. [ProductDtoMapper.java](api-service/src/main/java/com/vendoria/product/mapper/ProductDtoMapper.java)
+
+- **Optional**: Used for handling potential missing values, which helps avoid `NullPointerException` and makes the code safer. [OrderItemRepository.java](api-service/src/main/java/com/vendoria/order/persistence/OrderItemRepository.java)
+
+### 3. Exception Handling
 
 - Custom exceptions: [ServiceException.java](bff-service/src/main/java/com/vendoria/exception/custom/ServiceException.java)
 - Exception handling: [GlobalExceptionHandler.java](bff-service/src/main/java/com/vendoria/exception/handler/GlobalExceptionHandler.java)
 - Exception logging: [CustomUserDetailsService.java](bff-service/src/main/java/com/vendoria/security/service/CustomUserDetailsService.java)
 
-### 3. Object class, Wrapper Classes and Generics
+### 4. Object class, Wrapper Classes and Generics
 
 - Object methods overriding (equals, hashCode, clone): [BaseEntity.java](api-service/src/main/java/com/vendoria/common/entities/BaseEntity.java)
 - Comparable interface implementation: [BaseEntity.java](api-service/src/main/java/com/vendoria/common/entities/BaseEntity.java)
 - Generic classes and methods: [ResultWithValue.java](api-service/src/main/java/com/vendoria/common/ResultWithValue.java)
 - Generic utility methods: [EntityUtils.java](api-service/src/main/java/com/vendoria/common/utils/EntityUtils.java)
 
-### 4. RegularExpressions, Reflection, Annotations
+### 5. RegularExpressions, Reflection, Annotations
 
 - Custom validation annotation: [Password.java](api-service/src/main/java/com/vendoria/common/validation/Password.java)
 - Annotation processor (RegExp): [PasswordValidator.java](api-service/src/main/java/com/vendoria/common/validation/PasswordValidator.java)
@@ -70,7 +80,7 @@ The project uses a microservices architecture with three main components:
 - Spring annotations: [AuthController.java](api-service/src/main/java/com/vendoria/user/controller/AuthController.java)
 - Custom reflection utilities: [ReflectionUtils.java](api-service/src/main/java/com/vendoria/common/utils/ReflectionUtils.java)
 
-### 5. Lambda Expressions, Functional Interfaces, Method References, Stream API
+### 6. Lambda Expressions, Functional Interfaces, Method References, Stream API
 
 - **Lambda Expressions**: Used in the `CartController` to process lists of `OrderItemDto` and convert them to `OrderItem`. [CartController.java](api-service/src/main/java/com/vendoria/order/controller/CartController.java)
 - **Functional Interfaces**: The `ProductFilter` functional interface is used in the `ProductService` to filter products based on specific conditions. This allows for flexible filtering logic using lambda expressions. [ProductFilter.java](api-service/src/main/java/com/vendoria/product/filter/ProductFilter.java)

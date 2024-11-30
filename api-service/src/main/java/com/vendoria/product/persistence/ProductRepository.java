@@ -8,15 +8,21 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
 public class ProductRepository {
     private static final SessionFactory factory = HibernateUtil.getSessionFactory();
+    private Map<Long, Product> productCache = new HashMap<>();
 
     public Optional<Product> findById(Long id) {
+        if (productCache.containsKey(id)) {
+            return Optional.of(productCache.get(id));
+        }
+
         Session session = factory.openSession();
         Product product = session.get(Product.class, id);
         session.close();
@@ -44,6 +50,9 @@ public class ProductRepository {
         session.persist(product);
         tx.commit();
         session.close();
+
+        productCache.put(product.getId(), product);
+
         return product;
     }
 
@@ -53,6 +62,8 @@ public class ProductRepository {
 
         Product product = session.get(Product.class, id);
         if (product != null) {
+            productCache.remove(id);
+
             product.setName(updatedProduct.getName());
             product.setDescription(updatedProduct.getDescription());
             product.setPrice(updatedProduct.getPrice());
@@ -62,6 +73,9 @@ public class ProductRepository {
 
         tx.commit();
         session.close();
+
+        productCache.put(id, updatedProduct);
+
         return product;
     }
 
@@ -74,5 +88,7 @@ public class ProductRepository {
         }
         tx.commit();
         session.close();
+
+        productCache.remove(id);
     }
 }
