@@ -6,6 +6,7 @@ import com.vendoria.common.errors.Error;
 import com.vendoria.product.dto.ProductDto;
 import com.vendoria.product.entity.Product;
 import com.vendoria.product.errors.ProductErrors;
+import com.vendoria.product.filter.ProductFilter;
 import com.vendoria.product.mapper.ProductDtoMapper;
 import com.vendoria.product.persistence.ProductRepository;
 import com.vendoria.product.requests.CreateProductRequest;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,8 +37,13 @@ public class ProductService {
 
     public ResultWithValue<List<ProductDto>> getAllProducts() {
         try {
-            var products = productRepository.findAll();
-            var productDtos = productDtoMapper.mapProductListToProductDtoList(products);
+            var productDtos = productDtoMapper
+                    .mapProductListToProductDtoList(
+                            filterProducts(
+                                    productRepository.findAll(),
+                                    product -> product.getStockQuantity() > 0
+                            )
+                    );
 
             return ResultWithValue.successWithValue(productDtos);
         } catch (Exception e) {
@@ -47,14 +54,25 @@ public class ProductService {
 
     public ResultWithValue<List<ProductDto>> findByName(String name) {
         try {
-            var products = productRepository.findByNameContainingIgnoreCase(name);
-            var productDtos = productDtoMapper.mapProductListToProductDtoList(products);
+            var productDtos = productDtoMapper
+                    .mapProductListToProductDtoList(
+                            filterProducts(
+                                    productRepository.findByNameContainingIgnoreCase(name),
+                                    product -> product.getStockQuantity() > 0
+                            )
+                    );
 
             return ResultWithValue.successWithValue(productDtos);
         } catch (Exception e) {
             log.error("Error getting all products", e);
             return ResultWithValue.failureWithResult(Error.UNEXPECTED);
         }
+    }
+
+    public List<Product> filterProducts(List<Product> products, ProductFilter filter) {
+        return products.stream()
+                .filter(filter::test)
+                .collect(Collectors.toList());
     }
 
     public Result createProduct(CreateProductRequest request) {

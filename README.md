@@ -29,7 +29,7 @@ The project uses a microservices architecture with three main components:
 - Manages authentication and authorization
 - Uses Thymeleaf for server-side rendering
 
-### API Service (Port 5000) 
+### API Service (Port 5000)
 
 - Core business logic service
 - Interacts with PostgreSQL database
@@ -69,6 +69,65 @@ The project uses a microservices architecture with three main components:
 - Validation constraints usage: [RegisterUserRequest.java](api-service/src/main/java/com/vendoria/user/requests/RegisterUserRequest.java)
 - Spring annotations: [AuthController.java](api-service/src/main/java/com/vendoria/user/controller/AuthController.java)
 - Custom reflection utilities: [ReflectionUtils.java](api-service/src/main/java/com/vendoria/common/utils/ReflectionUtils.java)
+
+### 5. Lambda Expressions, Functional Interfaces, Method References, Stream API
+
+- **Lambda Expressions**: Used in the `CartController` to process lists of `OrderItemDto` and convert them to `OrderItem`. [CartController.java](api-service/src/main/java/com/vendoria/order/controller/CartController.java)
+- **Functional Interfaces**: The `ProductFilter` functional interface is used in the `ProductService` to filter products based on specific conditions. This allows for flexible filtering logic using lambda expressions. [ProductFilter.java](api-service/src/main/java/com/vendoria/product/filter/ProductFilter.java)
+
+    #### Methods in ProductService
+
+    - **filterProducts**: Filters a list of products based on a given `ProductFilter`. [ProductService.java](api-service/src/main/java/com/vendoria/product/service/ProductService.java)
+        ```java
+        public List<Product> filterProducts(List<Product> products, ProductFilter filter) {
+            return products.stream()
+                    .filter(filter::test)
+                    .collect(Collectors.toList());
+        }
+        ```
+
+    - **getAllProducts**: Retrieves all products and filters them based on stock quantity using the `filterProducts` method. [ProductService.java](api-service/src/main/java/com/vendoria/product/service/ProductService.java)
+        ```java
+        public ResultWithValue<List<ProductDto>> getAllProducts() {
+            try {
+                var productDtos = productDtoMapper
+                        .mapProductListToProductDtoList(
+                                filterProducts(
+                                        productRepository.findAll(),
+                                        product -> product.getStockQuantity() > 0
+                                )
+                        );
+
+                return ResultWithValue.successWithValue(productDtos);
+            } catch (Exception e) {
+                log.error("Error getting all products", e);
+                return ResultWithValue.failureWithResult(Error.UNEXPECTED);
+            }
+        }
+        ```
+
+    - **findByName**: Finds products by name and filters them based on stock quantity using the `filterProducts` method. [ProductService.java](api-service/src/main/java/com/vendoria/product/service/ProductService.java)
+        ```java
+        public ResultWithValue<List<ProductDto>> findByName(String name) {
+            try {
+                var productDtos = productDtoMapper
+                        .mapProductListToProductDtoList(
+                                filterProducts(
+                                        productRepository.findByNameContainingIgnoreCase(name),
+                                        product -> product.getStockQuantity() > 0
+                                )
+                        );
+
+                return ResultWithValue.successWithValue(productDtos);
+            } catch (Exception e) {
+                log.error("Error getting all products", e);
+                return ResultWithValue.failureWithResult(Error.UNEXPECTED);
+            }
+        }
+        ```
+
+- **Method References**: Method references can be used to simplify code in the `CartController` for converting DTOs to entities. [CartController.java](api-service/src/main/java/com/vendoria/order/controller/CartController.java)
+- **Stream API**: Utilized in various parts of the project to process collections, such as filtering available products and calculating total order costs. [OrderDtoMapper.java](api-service/src/main/java/com/vendoria/order/mapper/OrderDtoMapper.java)
 
 ## Technologies Used
 

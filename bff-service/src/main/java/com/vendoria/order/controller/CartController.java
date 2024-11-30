@@ -2,13 +2,9 @@ package com.vendoria.order.controller;
 
 import com.vendoria.common.handlers.ErrorHandler;
 import com.vendoria.order.dto.OrderItemDto;
-import com.vendoria.order.entity.Order;
-import com.vendoria.order.entity.OrderItem;
 import com.vendoria.order.service.OrderService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
