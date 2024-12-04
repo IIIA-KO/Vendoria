@@ -59,26 +59,31 @@ The project uses a microservices architecture with three main components:
 
 - **Optional**: Used for handling potential missing values, which helps avoid `NullPointerException` and makes the code safer. [OrderItemRepository.java](api-service/src/main/java/com/vendoria/order/persistence/OrderItemRepository.java)
 
-### 3. Exception Handling
-
-- Custom exceptions: [ServiceException.java](bff-service/src/main/java/com/vendoria/exception/custom/ServiceException.java)
-- Exception handling: [GlobalExceptionHandler.java](bff-service/src/main/java/com/vendoria/exception/handler/GlobalExceptionHandler.java)
-- Exception logging: [CustomUserDetailsService.java](bff-service/src/main/java/com/vendoria/security/service/CustomUserDetailsService.java)
-
-### 4. Object class, Wrapper Classes and Generics
+### 3. Object class, Wrapper Classes and Generics
 
 - Object methods overriding (equals, hashCode, clone): [BaseEntity.java](api-service/src/main/java/com/vendoria/common/entities/BaseEntity.java)
 - Comparable interface implementation: [BaseEntity.java](api-service/src/main/java/com/vendoria/common/entities/BaseEntity.java)
 - Generic classes and methods: [ResultWithValue.java](api-service/src/main/java/com/vendoria/common/ResultWithValue.java)
 - Generic utility methods: [EntityUtils.java](api-service/src/main/java/com/vendoria/common/utils/EntityUtils.java)
 
-### 5. RegularExpressions, Reflection, Annotations
+### 4. String, StringBuffer, StringBuilder, Localization, Internationalization, and Date API
 
-- Custom validation annotation: [Password.java](api-service/src/main/java/com/vendoria/common/validation/Password.java)
-- Annotation processor (RegExp): [PasswordValidator.java](api-service/src/main/java/com/vendoria/common/validation/PasswordValidator.java)
-- Validation constraints usage: [RegisterUserRequest.java](api-service/src/main/java/com/vendoria/user/requests/RegisterUserRequest.java)
-- Spring annotations: [AuthController.java](api-service/src/main/java/com/vendoria/user/controller/AuthController.java)
-- Custom reflection utilities: [ReflectionUtils.java](api-service/src/main/java/com/vendoria/common/utils/ReflectionUtils.java)
+- **String**: Used for handling product names and descriptions. For example, the `Product` class has a method to format the product name. [Product.java](bff-service/src/main/java/com/vendoria/product/entity/Product.java)
+
+- **StringBuffer**: Utilized in the `Order` class to build detailed order descriptions efficiently, allowing for thread-safe string manipulation. [Order.java](api-service/src/main/java/com/vendoria/order/entity/Order.java)
+- **StringBuilder**: Used in the `OrderDtoMapper` to construct order details in a more efficient manner and now included in the `OrderDto`. [OrderDtoMapper.java](api-service/src/main/java/com/vendoria/order/mapper/OrderDtoMapper.java)
+- **Date API**: The `Order` class uses `LocalDate` to store the order date, with methods to format them for display. [Order.java](api-service/src/main/java/com/vendoria/order/entity/Order.java)
+- **Localization and Internationalization**: The project implements localization to support multiple languages, enhancing user experience. Localization is achieved through the use of `ResourceBundle` to manage language-specific properties files.
+
+  - The `receipt.properties` file contains English localization keys, while `receipt_uk.properties` provides Ukrainian localization. The relevant code for generating localized receipts can be found in [ReceiptService.java](bff-service/src/main/java/com/vendoria/receipt/ReceiptService.java).
+  
+  - The receipt page template (`receipt.html`) utilizes Thymeleaf to dynamically display localized content based on the user's selected language. This allows users to interact with the application in their preferred language, improving accessibility and user satisfaction. The template can be found at [receipt.html](bff-service/src/main/resources/templates/receipt.html).
+
+### 5. Exception Handling
+
+- Custom exceptions: [ServiceException.java](bff-service/src/main/java/com/vendoria/exception/custom/ServiceException.java)
+- Exception handling: [GlobalExceptionHandler.java](bff-service/src/main/java/com/vendoria/exception/handler/GlobalExceptionHandler.java)
+- Exception logging: [CustomUserDetailsService.java](bff-service/src/main/java/com/vendoria/security/service/CustomUserDetailsService.java)
 
 ### 6. Lambda Expressions, Functional Interfaces, Method References, Stream API
 
@@ -138,6 +143,14 @@ The project uses a microservices architecture with three main components:
 
 - **Method References**: Method references can be used to simplify code in the `CartController` for converting DTOs to entities. [CartController.java](api-service/src/main/java/com/vendoria/order/controller/CartController.java)
 - **Stream API**: Utilized in various parts of the project to process collections, such as filtering available products and calculating total order costs. [OrderDtoMapper.java](api-service/src/main/java/com/vendoria/order/mapper/OrderDtoMapper.java)
+
+### 7. RegularExpressions, Reflection, Annotations
+
+- Custom validation annotation: [Password.java](api-service/src/main/java/com/vendoria/common/validation/Password.java)
+- Annotation processor (RegExp): [PasswordValidator.java](api-service/src/main/java/com/vendoria/common/validation/PasswordValidator.java)
+- Validation constraints usage: [RegisterUserRequest.java](api-service/src/main/java/com/vendoria/user/requests/RegisterUserRequest.java)
+- Spring annotations: [AuthController.java](api-service/src/main/java/com/vendoria/user/controller/AuthController.java)
+- Custom reflection utilities: [ReflectionUtils.java](api-service/src/main/java/com/vendoria/common/utils/ReflectionUtils.java)
 
 ## Technologies Used
 

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{receipt.title}">Receipt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div class="container mx-auto px-4 py-8">
+    <h1 th:text="#{receipt.title}" class="text-3xl font-bold mb-4"></h1>
+
+    <pre th:text="${receipt}"></pre>
+
+    <div class="language-selector">
+        <a href="/change-language?lang=en" class="text-gray-500 hover:text-green-500">English</a>
+        <a href="/change-language?lang=uk" class="text-gray-500 hover:text-green-500">Українська</a>
+        <a href="/change-language?lang=es" class="text-gray-500 hover:text-green-500">Español</a>
+    </div>
+</div>
+</body>
+</html>

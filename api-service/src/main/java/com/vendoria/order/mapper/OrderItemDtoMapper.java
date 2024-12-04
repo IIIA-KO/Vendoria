@@ -18,6 +18,7 @@ public class OrderItemDtoMapper {
         return OrderItem.builder()
                 .productId(orderItemDto.getProductId())
                 .quantity(orderItemDto.getQuantity())
+                .productPrice(orderItemDto.getProductPrice())
                 .build();
     }
 }

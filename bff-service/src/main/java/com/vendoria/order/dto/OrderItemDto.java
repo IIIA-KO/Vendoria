@@ -9,5 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class OrderItemDto {
     private Long productId;
+    private String productName;
+    private Double productPrice;
     private Integer quantity;
 }

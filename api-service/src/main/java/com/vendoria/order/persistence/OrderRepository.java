@@ -45,4 +45,12 @@ public class OrderRepository {
         tx.commit();
         session.close();
     }
+
+    public Optional<Order> getLast() {
+        try (Session session = factory.openSession()) {
+            return Optional.ofNullable(session.createQuery("FROM Order o JOIN FETCH o.items ORDER BY o.date DESC", Order.class)
+                    .setMaxResults(1)
+                    .uniqueResult());
+        }
+    }
 }

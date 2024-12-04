@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.parameters.P;
 
 @Data
 @Builder
@@ -21,4 +22,8 @@ public class Product {
 
     @Min(0)
     private Integer stockQuantity;
+
+    public String getFormattedName() {
+        return "Product: " + name.toUpperCase();
+    }
 }

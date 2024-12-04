@@ -16,7 +16,7 @@ public class BaseApiController {
 
     protected ResponseEntity<?> handleResult(Result result) {
         if (result.isSuccess()) {
-            return ResponseEntity.ok(result);
+            return ResponseEntity.ok(Result.success());
         }
         return ResponseEntity.status(200).body(result);
     }

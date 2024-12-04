@@ -8,8 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Data
 @Builder
@@ -31,5 +33,24 @@ public class Order extends BaseEntity {
     public void removeItem(OrderItem item) {
         items.remove(item);
         item.setOrder(null);
+    }
+
+    public String getFormattedDate(String pattern, Locale locale) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, locale);
+        return date.format(formatter);
+    }
+
+    public String getDefaultFormattedDate() {
+        return getFormattedDate("dd-MM-yyyy", Locale.ENGLISH);
+    }
+
+    public String getOrderDetails() {
+        StringBuilder orderDetails = new StringBuilder("Order Details:\n");
+        for (OrderItem item : items) {
+            orderDetails.append("Product ID: ").append(item.getProductId())
+                    .append(" - Quantity: ").append(item.getQuantity())
+                    .append(" - Price: ").append(item.getProductPrice()).append("\n");
+        }
+        return orderDetails.toString();
     }
 }

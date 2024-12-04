@@ -57,7 +57,6 @@
         const cartDataInput = document.getElementById('cartData');
 
         function getCart() {
-            console.log("Cart: ", JSON.parse(localStorage.getItem('cart')) || [])
             return JSON.parse(localStorage.getItem('cart')) || [];
         }
 

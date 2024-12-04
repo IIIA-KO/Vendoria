@@ -3,6 +3,7 @@ package com.vendoria.bff.feign.client;
 import com.vendoria.bff.feign.config.FeignConfig;
 import com.vendoria.common.Result;
 import com.vendoria.common.ResultWithValue;
+import com.vendoria.order.dto.OrderDto;
 import com.vendoria.order.dto.OrderItemDto;
 import com.vendoria.product.dto.ProductDto;
 import com.vendoria.product.requests.CreateProductRequest;
@@ -50,4 +51,7 @@ public interface IVendoriaApiClient {
 
     @PostMapping("/api/cart/order")
     Result createOrder(@RequestBody List<OrderItemDto> orderItems);
+
+    @GetMapping("/api/orders/last")
+    OrderDto getLastOrder();
 }
