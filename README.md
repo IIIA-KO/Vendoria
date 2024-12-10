@@ -17,6 +17,10 @@ The main goal is to implement and showcase core Java programming concepts includ
 7. Multithreading
 8. Lambda expressions, Functional interfaces, Method references, Stream API
 9. Regular expressions, Reflection, Annotations
+10. JDBC
+11. Testing with JUnit & Mockito
+12. Maven & Gradle
+13. Java Server Pages. JSP Standart Tag Library
 
 ## Architecture
 
@@ -49,24 +53,14 @@ The project uses a microservices architecture with three main components:
 - Interface implementation: [CustomUserDetails.java](bff-service/src/main/java/com/vendoria/security/entity/CustomUserDetails.java)
 - Inheritance and method overriding: [User.java](api-service/src/main/java/com/vendoria/user/entity/User.java)
 
-### 2. Java Collection Framework
-
-- **HashMap**: Used in the `ProductRepository` to cache products by their IDs. This allows for quick access to products, reducing lookup time. When a product is requested, it first checks the cache, and if the product is found, it is returned from the cache, improving performance. If the product is not found in the cache, it is loaded from the database and added to the cache for future use. [ProductRepository.java](api-service/src/main/java/com/vendoria/product/persistence/ProductRepository.java)
-
-- **ArrayList**: Used in classes like `OrderItemService` to store lists of order items. This allows for dynamic resizing of the list and easy addition or removal of elements. [OrderItemService.java](api-service/src/main/java/com/vendoria/order/service/OrderItemService.java)
-
-- **Stream API**: Utilized in various parts of the project for processing collections, such as filtering available products, converting lists of objects to DTOs, and other collection operations. [ProductDtoMapper.java](api-service/src/main/java/com/vendoria/product/mapper/ProductDtoMapper.java)
-
-- **Optional**: Used for handling potential missing values, which helps avoid `NullPointerException` and makes the code safer. [OrderItemRepository.java](api-service/src/main/java/com/vendoria/order/persistence/OrderItemRepository.java)
-
-### 3. Object class, Wrapper Classes and Generics
+### 2. Object class, Wrapper Classes and Generics
 
 - Object methods overriding (equals, hashCode, clone): [BaseEntity.java](api-service/src/main/java/com/vendoria/common/entities/BaseEntity.java)
 - Comparable interface implementation: [BaseEntity.java](api-service/src/main/java/com/vendoria/common/entities/BaseEntity.java)
 - Generic classes and methods: [ResultWithValue.java](api-service/src/main/java/com/vendoria/common/ResultWithValue.java)
 - Generic utility methods: [EntityUtils.java](api-service/src/main/java/com/vendoria/common/utils/EntityUtils.java)
 
-### 4. String, StringBuffer, StringBuilder, Localization, Internationalization, and Date API
+### 3. String, StringBuffer, StringBuilder, Localization, Internationalization, and Date API
 
 - **String**: Used for handling product names and descriptions. For example, the `Product` class has a method to format the product name. [Product.java](bff-service/src/main/java/com/vendoria/product/entity/Product.java)
 
@@ -78,6 +72,16 @@ The project uses a microservices architecture with three main components:
   - The `receipt.properties` file contains English localization keys, while `receipt_uk.properties` provides Ukrainian localization. The relevant code for generating localized receipts can be found in [ReceiptService.java](bff-service/src/main/java/com/vendoria/receipt/ReceiptService.java).
   
   - The receipt page template (`receipt.html`) utilizes Thymeleaf to dynamically display localized content based on the user's selected language. This allows users to interact with the application in their preferred language, improving accessibility and user satisfaction. The template can be found at [receipt.html](bff-service/src/main/resources/templates/receipt.html).
+
+### 4. Java Collection Framework
+
+- **HashMap**: Used in the `ProductRepository` to cache products by their IDs. This allows for quick access to products, reducing lookup time. When a product is requested, it first checks the cache, and if the product is found, it is returned from the cache, improving performance. If the product is not found in the cache, it is loaded from the database and added to the cache for future use. [ProductRepository.java](api-service/src/main/java/com/vendoria/product/persistence/ProductRepository.java)
+
+- **ArrayList**: Used in classes like `OrderItemService` to store lists of order items. This allows for dynamic resizing of the list and easy addition or removal of elements. [OrderItemService.java](api-service/src/main/java/com/vendoria/order/service/OrderItemService.java)
+
+- **Stream API**: Utilized in various parts of the project for processing collections, such as filtering available products, converting lists of objects to DTOs, and other collection operations. [ProductDtoMapper.java](api-service/src/main/java/com/vendoria/product/mapper/ProductDtoMapper.java)
+
+- **Optional**: Used for handling potential missing values, which helps avoid `NullPointerException` and makes the code safer. [OrderItemRepository.java](api-service/src/main/java/com/vendoria/order/persistence/OrderItemRepository.java)
 
 ### 5. Exception Handling
 
@@ -151,6 +155,32 @@ The project uses a microservices architecture with three main components:
 - Validation constraints usage: [RegisterUserRequest.java](api-service/src/main/java/com/vendoria/user/requests/RegisterUserRequest.java)
 - Spring annotations: [AuthController.java](api-service/src/main/java/com/vendoria/user/controller/AuthController.java)
 - Custom reflection utilities: [ReflectionUtils.java](api-service/src/main/java/com/vendoria/common/utils/ReflectionUtils.java)
+
+### 8. JDBC
+
+### 9. Testing with JUnit & Mockito
+
+Testing in the Vendoria project is implemented using JUnit and Mockito, ensuring the reliability and correctness of the application components.
+
+#### Key Aspects of Testing
+
+- **JUnit**: The primary framework for writing tests, organized into separate classes for different components, such as services and mappers.
+- **Mockito**: Used for creating mock objects to isolate the components being tested from their dependencies.
+
+#### Examples of Testing
+
+- **Service Testing**: Tests for service methods, such as `getAllProducts()` in `ProductServiceTest`, ensuring correct behavior and interactions with repositories.
+  - Example: [ProductServiceTest.java](api-service/src/test/java/com/vendoria/apiservice/ProductServiceTest.java)
+
+- **Mapper Testing**: Validates the correctness of data mapping between entities and DTOs.
+  - Example: [ProductDtoMapperTest.java](api-service/src/test/java/com/vendoria/apiservice/ProductDtoMapperTest.java)
+
+- **Integration Testing**: Ensures that Feign Client handles requests and responses correctly.
+  - Example: [VendoriaApiClientTest.java](bff-service/src/test/java/com/vendoria/bffservice/VendoriaApiClientTest.java)
+
+### 10. Maven & Gradle
+
+### 11. Java Server Pages. JSP Standart Tag Library
 
 ## Technologies Used
 
