@@ -207,6 +207,34 @@ Testing in the Vendoria project is implemented using JUnit and Mockito, ensuring
 
 ### 10. Maven & Gradle
 
+The Vendoria project utilizes Maven as the build automation tool for managing project dependencies, building the application, and running tests. Maven provides a standardized way to manage the project's lifecycle and dependencies, ensuring that all necessary libraries are included and properly configured.
+
+#### Key Aspects of Maven Implementation
+
+- **Project Structure**: The project follows the standard Maven directory layout, which includes directories for source code, resources, and test code. This structure helps in organizing the project effectively.
+
+- **POM File**: The `pom.xml` file is the core of the Maven project, containing configuration details such as project dependencies, build settings, and plugin configurations.
+  - Example: [api-service/pom.xml](api-service/pom.xml)
+  - Example: [bff-service/pom.xml](bff-service/pom.xml)
+
+- **Dependencies Management**: Maven manages project dependencies through the `dependencies` section in the `pom.xml` file. This includes libraries for Spring Boot, Hibernate, PostgreSQL, and testing frameworks like JUnit and Mockito.
+  - Example dependencies:
+    - Spring Boot Starter: `org.springframework.boot:spring-boot-starter`
+    - Hibernate: `org.hibernate:hibernate-core`
+    - PostgreSQL Driver: `org.postgresql:postgresql`
+    - Mockito: `org.mockito:mockito-core`
+
+- **Build Lifecycle**: Maven defines a build lifecycle that includes phases such as `compile`, `test`, `package`, and `install`. Each phase corresponds to a specific task in the build process, allowing for a clear and organized workflow.
+
+- **Plugins**: Maven supports various plugins that extend its functionality. For example, the `spring-boot-maven-plugin` is used to package the application as an executable JAR file.
+  - Example: 
+    ```xml
+    <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+    </plugin>
+    ```
+
 ### 11. Java Server Pages. JSP Standart Tag Library
 
 ## Technologies Used
