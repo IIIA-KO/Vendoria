@@ -158,6 +158,33 @@ The project uses a microservices architecture with three main components:
 
 ### 8. JDBC
 
+The Vendoria project utilizes JDBC for database interactions, specifically with a PostgreSQL database that runs in a Docker container. The project employs Hibernate as the ORM (Object-Relational Mapping) framework to facilitate database operations.
+
+#### Key Aspects of JDBC Implementation:
+
+- **Database Connection**: The connection to the PostgreSQL database is configured in the `application.yaml` file, specifying the URL, username, and password for the database.
+  - Example: [application.yaml](api-service/src/main/resources/application.yaml)
+
+- **Hibernate Configuration**: Hibernate is configured through the `hibernate.cfg.xml` file, which includes settings for the database connection, connection pool, and dialect.
+  - Example: [hibernate.cfg.xml](api-service/src/main/resources/hibernate.cfg.xml)
+
+- **Session Management**: The project uses Hibernate's `SessionFactory` to manage sessions for database operations. Each repository class opens a session to perform CRUD operations and closes it afterward.
+  - Example: [ProductRepository.java](api-service/src/main/java/com/vendoria/product/persistence/ProductRepository.java)
+  - Example: [OrderRepository.java](api-service/src/main/java/com/vendoria/order/persistence/OrderRepository.java)
+
+- **Entity Mapping**: Entities are mapped to database tables using Hibernate annotations. For instance, the `Product`, `Order`, and `User` classes are annotated to define their mappings to the corresponding database tables.
+  - Example: [Product.java](api-service/src/main/java/com/vendoria/product/entity/Product.java)
+  - Example: [Order.java](api-service/src/main/java/com/vendoria/order/entity/Order.java)
+
+- **Transaction Management**: Transactions are managed manually in the repository methods using Hibernate's `Transaction` class. This ensures that operations are atomic and consistent.
+  - Example: [OrderItemRepository.java](api-service/src/main/java/com/vendoria/order/persistence/OrderItemRepository.java)
+
+#### Libraries and Technologies Used
+
+- **PostgreSQL**: The primary database used for data storage, running in a Docker container.
+- **Hibernate**: The ORM framework used for mapping Java objects to database tables and managing database operations.
+- **JDBC**: The underlying technology used for database connectivity.
+
 ### 9. Testing with JUnit & Mockito
 
 Testing in the Vendoria project is implemented using JUnit and Mockito, ensuring the reliability and correctness of the application components.
