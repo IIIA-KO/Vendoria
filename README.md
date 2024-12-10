@@ -236,6 +236,49 @@ The Vendoria project utilizes Maven as the build automation tool for managing pr
     ```
 
 ### 11. Java Server Pages. JSP Standart Tag Library
+The Vendoria project primarily utilizes Thymeleaf as the templating engine for rendering dynamic web content in the BFF (Backend for Frontend) service. Thymeleaf allows for the creation of HTML pages that can include server-side logic, making it easier to generate dynamic content based on user interactions and data from the backend.
+
+#### Key Aspects of Thymeleaf Implementation:
+
+- **Dynamic Content Generation**: Thymeleaf templates are used to generate HTML content dynamically. This allows the application to display data retrieved from the backend, such as product listings, user information, and order details.
+  - Example: [home.html](bff-service/src/main/resources/templates/home.html)
+  - Example: [list.html](bff-service/src/main/resources/templates/products/list.html)
+
+- **Thymeleaf Syntax**: Thymeleaf uses a natural templating syntax that integrates seamlessly with HTML. This allows developers to write templates that are both readable and maintainable.
+  - **Attributes**: Thymeleaf uses attributes prefixed with `th:` to perform operations. For example, `th:text` is used to set the text content of an element, and `th:href` is used to dynamically set the URL of a link.
+    ```html
+    <h1 th:text="${product.name}">Product Name</h1>
+    <a th:href="@{/products/{id}(id=${product.id})}">View Product</a>
+    ```
+
+- **Conditional Rendering**: Thymeleaf supports conditional rendering using `th:if` and `th:unless` attributes, allowing developers to show or hide elements based on certain conditions.
+  ```html
+  <div th:if="${user != null}">
+      Welcome, <span th:text="${user.name}"></span>!
+  </div>
+  ```
+
+- **Iteration**: The `th:each` attribute is used to iterate over collections, making it easy to display lists of items.
+  ```html
+  <div th:each="product : ${products}">
+      <h2 th:text="${product.name}">Product Name</h2>
+  </div>
+  ```
+
+- **Integration with Spring Security**: Thymeleaf can integrate with Spring Security to manage access control and display content based on user roles. This is done using the `sec:` namespace.
+  ```html
+  <div sec:authorize="isAuthenticated()">
+      <p>Welcome back!</p>
+  </div>
+  ```
+
+- **Layouts and Fragments**: Thymeleaf supports the use of layouts and fragments, allowing for reusable templates and consistent design across pages. This is achieved using the `th:replace` and `th:include` attributes.
+  ```html
+  <head th:replace="~{layouts/main :: head}"></head>
+  <body>
+      <th:block th:replace="~{layouts/main :: main(content=~{::div#content})}"></th:block>
+  </body>
+  ```
 
 ## Technologies Used
 
